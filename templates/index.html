@@ -1,157 +1,372 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FinSight — AI Financial Coach</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Karta — AI Financial Coach</title>
+  <link rel="stylesheet" href="/static/style.css"/>
 </head>
 <body>
-  <header>
-    <div class="header-inner">
-      <div class="logo">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <circle cx="14" cy="14" r="14" fill="url(#lg)"/>
-          <path d="M8 14h4l2-5 3 9 2-4h1" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <defs><linearGradient id="lg" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs>
-        </svg>
-        <span>FinSight</span>
+
+<!-- ═══════════════════════════════════════════
+     ONBOARDING MODAL
+═══════════════════════════════════════════ -->
+<div id="onboarding" class="onboarding-overlay">
+  <div class="onboarding-box">
+
+    <!-- Step 0: Welcome -->
+    <div class="ob-step active" data-step="0">
+      <div class="ob-hero">💳</div>
+      <h1>Welcome to Karta</h1>
+      <p class="ob-sub">Your AI-powered financial coach that helps you spend smarter and earn more rewards.</p>
+      <div class="ob-features">
+        <div class="ob-feature">✅ <span><strong>Credit Card Optimizer</strong> — always use the best card</span></div>
+        <div class="ob-feature">✅ <span><strong>Spending Nudge Engine</strong> — reflect before you spend</span></div>
+        <div class="ob-feature">✅ <span><strong>Budget Tracker</strong> — stay on top of every category</span></div>
+        <div class="ob-feature">✅ <span><strong>AI Chat</strong> — ask anything about your money</span></div>
       </div>
-      <p class="tagline">AI-Powered Financial Coach</p>
+      <button class="btn-primary ob-next">Get Started →</button>
+      <button class="btn-ghost ob-skip">Skip for now</button>
     </div>
+
+    <!-- Step 1: How it works -->
+    <div class="ob-step" data-step="1">
+      <div class="ob-step-indicator">Step 1 of 3</div>
+      <div class="ob-hero">🔍</div>
+      <h2>How It Works</h2>
+      <div class="ob-steps-list">
+        <div class="ob-how">
+          <div class="ob-how-num">1</div>
+          <div><strong>Enter a purchase</strong><br><span>Type the merchant, amount, and category.</span></div>
+        </div>
+        <div class="ob-how">
+          <div class="ob-how-num">2</div>
+          <div><strong>AI analyzes your spending</strong><br><span>Claude reviews your history and card rewards.</span></div>
+        </div>
+        <div class="ob-how">
+          <div class="ob-how-num">3</div>
+          <div><strong>Get your recommendation</strong><br><span>Best card to use + a spending nudge score.</span></div>
+        </div>
+      </div>
+      <button class="btn-primary ob-next">Next →</button>
+      <button class="btn-ghost ob-skip">Skip</button>
+    </div>
+
+    <!-- Step 2: Your cards -->
+    <div class="ob-step" data-step="2">
+      <div class="ob-step-indicator">Step 2 of 3</div>
+      <div class="ob-hero">💳</div>
+      <h2>Your Linked Cards</h2>
+      <p class="ob-sub">These cards are pre-loaded for your demo:</p>
+      <div class="ob-card-list" id="obCardList"></div>
+      <button class="btn-primary ob-next">Next →</button>
+      <button class="btn-ghost ob-skip">Skip</button>
+    </div>
+
+    <!-- Step 3: Set budgets -->
+    <div class="ob-step" data-step="3">
+      <div class="ob-step-indicator">Step 3 of 3</div>
+      <div class="ob-hero">📊</div>
+      <h2>Your Budgets Are Set</h2>
+      <p class="ob-sub">We've pre-loaded demo budgets so you can see the full experience right away.</p>
+      <div class="ob-budget-preview">
+        <div class="ob-brow"><span>☕ Coffee & Cafes</span><span class="over">$287 / $150</span></div>
+        <div class="ob-brow"><span>🍔 Food Delivery</span><span class="over">$456 / $200</span></div>
+        <div class="ob-brow"><span>🛒 Groceries</span><span class="ok">$487 / $450</span></div>
+        <div class="ob-brow"><span>✈️ Travel</span><span class="good">$342 / $400</span></div>
+      </div>
+      <button class="btn-primary ob-finish">Let's Go! 🚀</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MAIN APP
+═══════════════════════════════════════════ -->
+<div id="app" class="app hidden">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-logo">💳 Karta</div>
+    <div class="header-sub">AI Financial Coach</div>
   </header>
 
-  <main>
-    <div class="layout">
+  <!-- Tab Content -->
+  <main class="app-main">
 
-      <!-- LEFT: Cards + Form -->
-      <div class="left-panel">
+    <!-- ── HOME TAB ── -->
+    <section id="tab-home" class="tab-section active">
 
-        <!-- Card Wallet -->
-        <section class="card-section">
-          <h2 class="section-title">Your Wallet</h2>
-          <div class="card-grid" id="cardGrid">
-            <!-- populated by JS -->
+      <!-- Spending Overview -->
+      <div class="section-card">
+        <h3 class="section-title">📊 May Spending Overview</h3>
+        <div class="overview-grid">
+          <div class="overview-item danger">
+            <div class="ov-icon">📦</div>
+            <div class="ov-info">
+              <div class="ov-name">Online Shopping</div>
+              <div class="ov-detail">28 purchases</div>
+            </div>
+            <div class="ov-right">
+              <div class="ov-amount">$823</div>
+              <div class="ov-over">+$323 over</div>
+            </div>
           </div>
-        </section>
-
-        <!-- Purchase Form -->
-        <section class="form-section">
-          <h2 class="section-title">Analyze a Purchase</h2>
-          <form id="analyzeForm">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="merchant">Merchant</label>
-                <input type="text" id="merchant" placeholder="e.g. Whole Foods, Delta, Netflix" required />
-              </div>
-              <div class="form-group amount-group">
-                <label for="amount">Amount ($)</label>
-                <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" required />
-              </div>
+          <div class="overview-item danger">
+            <div class="ov-icon">🍔</div>
+            <div class="ov-info">
+              <div class="ov-name">Food Delivery</div>
+              <div class="ov-detail">19 orders</div>
             </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="category">Category</label>
-                <select id="category">
-                  <option value="dining">Dining</option>
-                  <option value="groceries">Groceries</option>
-                  <option value="travel">Travel</option>
-                  <option value="gas">Gas</option>
-                  <option value="entertainment">Entertainment</option>
-                  <option value="shopping">Shopping</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="note">Note (optional)</label>
-                <input type="text" id="note" placeholder="Any context for this purchase?" />
-              </div>
+            <div class="ov-right">
+              <div class="ov-amount">$456</div>
+              <div class="ov-over">+$256 over</div>
             </div>
-            <button type="submit" id="analyzeBtn">
-              <span id="btnText">Analyze with AI</span>
-              <span id="btnSpinner" class="spinner hidden"></span>
-            </button>
-          </form>
-        </section>
-
+          </div>
+          <div class="overview-item danger">
+            <div class="ov-icon">☕</div>
+            <div class="ov-info">
+              <div class="ov-name">Coffee & Cafes</div>
+              <div class="ov-detail">18 visits</div>
+            </div>
+            <div class="ov-right">
+              <div class="ov-amount">$287</div>
+              <div class="ov-over">+$137 over</div>
+            </div>
+          </div>
+        </div>
+        <div class="overview-total">Total over budget: <strong class="danger-text">$716</strong></div>
       </div>
 
-      <!-- RIGHT: Results + History -->
-      <div class="right-panel">
-
-        <!-- AI Results -->
-        <section class="results-section" id="resultsSection">
-          <div class="results-placeholder" id="resultsPlaceholder">
-            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-              <circle cx="24" cy="24" r="23" stroke="#e2e8f0" stroke-width="2"/>
-              <path d="M14 24h6l3-7 4 13 3-6h4" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <p>Enter a purchase above to get your AI-powered card recommendation and spending insight.</p>
-          </div>
-
-          <div id="resultsContent" class="hidden">
-            <!-- Card Recommendation -->
-            <div class="result-block card-rec">
-              <div class="result-header">
-                <span class="result-icon">💳</span>
-                <h3>Card Recommendation</h3>
-              </div>
-              <div class="rec-card" id="recCard">
-                <div class="rec-card-name" id="recCardName"></div>
-                <div class="rec-card-reward" id="recCardReward"></div>
-                <div class="rec-card-estimate" id="recCardEstimate"></div>
-              </div>
-              <p class="rec-reasoning" id="recReasoning"></p>
-              <div class="runner-up" id="runnerUp">
-                <span class="runner-label">Runner-up:</span>
-                <span id="runnerUpText"></span>
-              </div>
-            </div>
-
-            <!-- Spending Nudge -->
-            <div class="result-block nudge">
-              <div class="result-header">
-                <span class="result-icon">🧠</span>
-                <h3>Spending Nudge</h3>
-              </div>
-              <div class="nudge-score-row">
-                <div class="nudge-score-circle" id="nudgeCircle">
-                  <span id="nudgeScore"></span>
-                  <small>/10</small>
-                </div>
-                <div class="verdict-badge" id="verdictBadge"></div>
-              </div>
-              <div class="nudge-score-bar">
-                <div class="nudge-bar-fill" id="nudgeBarFill"></div>
-              </div>
-              <div class="nudge-details">
-                <p class="nudge-reflection" id="nudgeReflection"></p>
-                <div class="nudge-insight" id="nudgePatternWrap">
-                  <span class="insight-label">Pattern</span>
-                  <p id="nudgePattern"></p>
-                </div>
-                <div class="nudge-tip" id="nudgeTipWrap">
-                  <span class="insight-label">💡 Tip</span>
-                  <p id="nudgeTip"></p>
-                </div>
-                <div class="nudge-question" id="nudgeQuestion"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Transaction History -->
-        <section class="history-section">
-          <h2 class="section-title">Recent Transactions</h2>
-          <div id="transactionList">
-            <!-- populated by JS -->
-          </div>
-        </section>
-
+      <!-- Quick Stats -->
+      <div class="quick-stats">
+        <div class="qs-card green" onclick="switchTab('rewards')">
+          <div class="qs-icon">🎁</div>
+          <div class="qs-amount">$347</div>
+          <div class="qs-label">Rewards Ready</div>
+        </div>
+        <div class="qs-card red" onclick="switchTab('subscriptions')">
+          <div class="qs-icon">🔄</div>
+          <div class="qs-amount">$56</div>
+          <div class="qs-label">Can Save/mo</div>
+        </div>
       </div>
-    </div>
+
+      <!-- Purchase Analyzer -->
+      <div class="section-card">
+        <h3 class="section-title">🧠 Analyze a Purchase</h3>
+        <form id="analyzeForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Merchant</label>
+              <input type="text" id="merchant" placeholder="e.g. Starbucks, Amazon" required/>
+            </div>
+            <div class="form-group">
+              <label>Amount ($)</label>
+              <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" required/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Category</label>
+              <select id="category">
+                <option value="dining">Dining</option>
+                <option value="groceries">Groceries</option>
+                <option value="travel">Travel</option>
+                <option value="gas">Gas</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="shopping">Shopping</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Note (optional)</label>
+              <input type="text" id="note" placeholder="Any context?"/>
+            </div>
+          </div>
+          <button type="submit" id="analyzeBtn">
+            <span id="btnText">Analyze with AI ✨</span>
+            <span id="btnSpinner" class="spinner hidden"></span>
+          </button>
+        </form>
+      </div>
+
+      <!-- AI Results -->
+      <div class="section-card" id="resultsSection">
+        <div id="resultsPlaceholder" class="placeholder-text">
+          <div class="placeholder-icon">🔍</div>
+          <p>Enter a purchase above to get your AI-powered card recommendation and spending insight.</p>
+        </div>
+        <div id="resultsContent" class="hidden">
+          <!-- Card Recommendation -->
+          <div class="result-block">
+            <h4>💳 Best Card to Use</h4>
+            <div class="rec-card" id="recCard">
+              <div class="rec-card-name" id="recCardName"></div>
+              <div class="rec-card-reward" id="recCardReward"></div>
+              <div class="rec-card-estimate" id="recCardEstimate"></div>
+            </div>
+            <p class="rec-reasoning" id="recReasoning"></p>
+            <div class="runner-up">Runner-up: <span id="runnerUpText"></span></div>
+          </div>
+          <!-- Spending Nudge -->
+          <div class="result-block">
+            <h4>🧠 Spending Nudge</h4>
+            <div class="nudge-row">
+              <div class="nudge-circle" id="nudgeCircle">
+                <span id="nudgeScore"></span><small>/10</small>
+              </div>
+              <div class="verdict-badge" id="verdictBadge"></div>
+            </div>
+            <div class="nudge-bar-wrap"><div class="nudge-bar" id="nudgeBar"></div></div>
+            <p class="nudge-text" id="nudgeReflection"></p>
+            <div class="insight-box accent"><span class="insight-label">Pattern</span><p id="nudgePattern"></p></div>
+            <div class="insight-box warn"><span class="insight-label">💡 Tip</span><p id="nudgeTip"></p></div>
+            <div class="nudge-question" id="nudgeQuestion"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Transactions -->
+      <div class="section-card">
+        <h3 class="section-title">🕒 Recent Transactions</h3>
+        <div id="transactionList"></div>
+      </div>
+
+    </section>
+
+    <!-- ── BUDGET TAB ── -->
+    <section id="tab-budget" class="tab-section">
+      <div class="section-card">
+        <h3 class="section-title">💰 Budget Manager</h3>
+        <div class="budget-summary">
+          <div class="bs-item">
+            <div class="bs-label">Monthly Budget</div>
+            <div class="bs-value">$2,200</div>
+          </div>
+          <div class="bs-item">
+            <div class="bs-label">Total Spent</div>
+            <div class="bs-value danger-text">$2,952</div>
+          </div>
+          <div class="bs-item">
+            <div class="bs-label">Over Budget</div>
+            <div class="bs-value danger-text">$752</div>
+          </div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div id="budgetList"></div>
+      </div>
+    </section>
+
+    <!-- ── INSIGHTS TAB ── -->
+    <section id="tab-insights" class="tab-section">
+      <div class="section-card">
+        <h3 class="section-title">📈 Spending Trends</h3>
+        <div class="trend-bars" id="trendBars"></div>
+        <p class="insight-note">⚠️ Spending increased 60% over 6 months</p>
+      </div>
+      <div class="section-card">
+        <h3 class="section-title">📊 Category Breakdown</h3>
+        <div id="categoryChart"></div>
+      </div>
+      <div class="section-card">
+        <h3 class="section-title">🔔 Recent Alerts</h3>
+        <div class="alerts-list">
+          <div class="alert-item warn">⚠️ You're $137 over your coffee budget this month</div>
+          <div class="alert-item tip">💡 Use AmEx Gold at Chipotle for 4x points</div>
+          <div class="alert-item good">🎉 You stayed under dining budget this week!</div>
+          <div class="alert-item info">📅 Netflix charges tomorrow ($19.99)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CHAT TAB ── -->
+    <section id="tab-chat" class="tab-section chat-tab">
+      <div class="chat-header">
+        <h3>🤖 Karta AI Assistant</h3>
+        <p>Ask anything about your finances</p>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-msg assistant">
+          <div class="msg-bubble">Hi! I'm Karta, your AI financial coach 👋<br><br>
+          I can help you with:<br>
+          • Budget tracking &amp; analysis<br>
+          • Credit card recommendations<br>
+          • Subscription management<br>
+          • Savings goals &amp; tips<br><br>
+          What would you like to know?</div>
+        </div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Ask about spending, cards, budgets..."/>
+        <button id="chatSendBtn" onclick="sendChat()">Send</button>
+      </div>
+    </section>
+
+    <!-- ── SUBSCRIPTIONS TAB ── -->
+    <section id="tab-subscriptions" class="tab-section">
+      <div class="section-card">
+        <h3 class="section-title">🔄 Subscription Tracker</h3>
+        <div class="budget-summary">
+          <div class="bs-item">
+            <div class="bs-label">Monthly Cost</div>
+            <div class="bs-value">$114.95</div>
+          </div>
+          <div class="bs-item">
+            <div class="bs-label">Can Save</div>
+            <div class="bs-value danger-text">$55.97/mo</div>
+          </div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div id="subscriptionList"></div>
+      </div>
+    </section>
+
+    <!-- ── REWARDS TAB ── -->
+    <section id="tab-rewards" class="tab-section">
+      <div class="section-card rewards-hero">
+        <div class="rh-label">Total Rewards Available</div>
+        <div class="rh-amount">$347.31</div>
+        <button class="btn-primary">Redeem All Rewards →</button>
+      </div>
+      <div class="section-card">
+        <h3 class="section-title">💳 Your Cards</h3>
+        <div id="rewardsList"></div>
+      </div>
+      <div class="section-card">
+        <div class="insight-box accent">
+          <span class="insight-label">💡 Tip</span>
+          <p>You're leaving $91/month on the table by not using optimal cards. Use the Purchase Analyzer on the Home tab!</p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <script src="/static/script.js"></script>
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="switchTab('home')" data-tab="home">
+      <span>🏠</span><span>Home</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('budget')" data-tab="budget">
+      <span>💰</span><span>Budget</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('insights')" data-tab="insights">
+      <span>📊</span><span>Insights</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('chat')" data-tab="chat">
+      <span>🤖</span><span>AI Chat</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('rewards')" data-tab="rewards">
+      <span>🎁</span><span>Rewards</span>
+    </button>
+  </nav>
+
+</div><!-- #app -->
+
+<script src="/static/script.js"></script>
 </body>
 </html>
